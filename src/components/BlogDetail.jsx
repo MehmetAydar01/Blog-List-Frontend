@@ -1,4 +1,4 @@
-const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog }) => {
+const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
   if (!blog) {
     return null
   }
@@ -24,9 +24,11 @@ const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog }) => {
         <button onClick={() => updateLikeNumber(blog.id)}>like</button>
       </p>
       <p>{name}</p>
-      <button onClick={() => handleDeleteBlog(blog.id)} style={buttonStyle}>
-        remove
-      </button>
+      {blog.user.name === user.name && blog.user.username === user.username && (
+        <button onClick={() => handleDeleteBlog(blog.id)} style={buttonStyle}>
+          remove
+        </button>
+      )}
     </div>
   )
 }

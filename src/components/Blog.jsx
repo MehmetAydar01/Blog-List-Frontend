@@ -1,6 +1,11 @@
 import SingleBlog from './SingleBlog'
 
-const Blog = ({ sortBlogsByLikes, updateLikeNumber, handleDeleteBlog }) => {
+const Blog = ({
+  sortBlogsByLikes,
+  updateLikeNumber,
+  handleDeleteBlog,
+  user,
+}) => {
   return (
     <>
       {sortBlogsByLikes.map((blog) => {
@@ -10,6 +15,7 @@ const Blog = ({ sortBlogsByLikes, updateLikeNumber, handleDeleteBlog }) => {
             blog={blog}
             updateLikeNumber={updateLikeNumber}
             handleDeleteBlog={handleDeleteBlog}
+            user={user}
           />
         )
       })}

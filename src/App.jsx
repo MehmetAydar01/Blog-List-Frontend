@@ -230,6 +230,7 @@ function App() {
             sortBlogsByLikes={sortBlogsByLikes}
             updateLikeNumber={updateLikeNumber}
             handleDeleteBlog={handleDeleteBlog}
+            user={user}
           />
         </div>
       )}

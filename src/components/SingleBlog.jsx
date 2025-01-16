@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import BlogDetail from './BlogDetail'
 
-const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog }) => {
+const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
   // Aktif blog ID'sini tutuyoruz
   const [activeBlogId, setActiveBlogId] = useState(null)
 
@@ -30,6 +30,7 @@ const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog }) => {
           blog={blog}
           updateLikeNumber={updateLikeNumber}
           handleDeleteBlog={handleDeleteBlog}
+          user={user}
         />
       )}
     </div>
