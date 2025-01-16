@@ -1,23 +1,18 @@
-import { useState, useEffect } from "react"
-import Blog from "./components/Blog"
-import blogService from "./services/blogs"
-import loginService from "./services/login"
-import NotificationMsg from "./components/NotificationMsg"
-import ToggleAble from "./components/ToggleAble"
-import BlogForm from "./components/BlogForm"
+import { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import NotificationMsg from './components/NotificationMsg'
+import ToggleAble from './components/ToggleAble'
+import BlogForm from './components/BlogForm'
 
 function App() {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
-  const [blogInput, setBlogInput] = useState({
-    title: "",
-    author: "",
-    url: "",
-  })
 
   useEffect(() => {
     const getBlogs = async () => {
@@ -33,7 +28,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const loggedUserJson = window.localStorage.getItem("loggedBlogappUser")
+    const loggedUserJson = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJson) {
       const user = JSON.parse(loggedUserJson)
       setUser(user)
@@ -47,12 +42,12 @@ function App() {
     try {
       const user = await loginService.login({ username, password })
 
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user))
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     } catch (exception) {
       setErrorMessage(exception?.response?.data?.error)
       // console.log(exception?.response?.data?.error)
@@ -63,9 +58,9 @@ function App() {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogappUser")
+    window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    blogService.setToken("")
+    blogService.setToken('')
   }
 
   const loginForm = () => (
@@ -92,27 +87,25 @@ function App() {
     </form>
   )
 
-  const handleCreateNewBlog = async (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      author: blogInput.author,
-      title: blogInput.title,
-      url: blogInput.url,
-    }
-
+  const handleCreateNewBlog = async (blogObject) => {
     try {
-      const blog = await blogService.create(newBlog)
+      const blog = await blogService.create(blogObject)
 
-      setBlogInput({
-        author: "",
-        title: "",
-        url: "",
-      })
+      const userInfo = {
+        name: user.name,
+        username: user.username,
+        id: blog.user,
+      }
       setSuccessMessage(`a new blog ${blog.title} - ${blog.author} added`)
-      setBlogs(blogs.concat(blog))
+
+      setBlogs(blogs.concat({ ...blog, user: userInfo }))
     } catch (exception) {
-      setErrorMessage(exception?.response?.data?.error)
+      if (exception?.response?.data?.error === 'token expired') {
+        setErrorMessage('please log in')
+        handleLogout()
+      } else {
+        setErrorMessage(exception?.response?.data?.error)
+      }
     }
 
     setTimeout(() => {
@@ -121,29 +114,97 @@ function App() {
     }, 3000)
   }
 
-  const handleBlogInput = (event) => {
-    const { name, value } = event.target
-
-    setBlogInput((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      }
-    })
-  }
-
   const blogForm = () => (
-    <ToggleAble buttonLabel='new blog'>
-      <BlogForm
-        handleCreateNewBlog={handleCreateNewBlog}
-        blogInput={blogInput}
-        handleBlogInput={handleBlogInput}
-      />
+    <ToggleAble buttonLabel='create new blog'>
+      <BlogForm createBlog={handleCreateNewBlog} />
     </ToggleAble>
   )
 
+  const updateLikeNumber = async (id) => {
+    const findBlog = blogs.find((item) => item.id === id)
+
+    if (!findBlog) {
+      setErrorMessage('This blog no longer exists.')
+      setTimeout(() => setErrorMessage(null), 3000)
+      return
+    }
+
+    const newObject = {
+      likes: findBlog.likes + 1,
+      author: findBlog.author,
+      title: findBlog.title,
+      url: findBlog.url,
+      user: findBlog.user.id,
+    }
+
+    const userInfo = {
+      name: findBlog.user.name,
+      username: findBlog.user.username,
+      id: findBlog.user.id,
+    }
+
+    try {
+      const updatedBlog = await blogService.update(id, newObject)
+
+      setBlogs(
+        blogs.map((item) =>
+          item.id === findBlog.id ? { ...updatedBlog, user: userInfo } : item
+        )
+      )
+    } catch (exception) {
+      if (exception?.response?.data?.error === 'Blog not found') {
+        setBlogs(blogs.filter((item) => item.id !== findBlog.id))
+      }
+      setErrorMessage(exception?.response?.data?.error)
+      console.log(exception)
+      setTimeout(() => setErrorMessage(null), 3000)
+    }
+  }
+
+  const handleDeleteBlog = async (id) => {
+    const findBlog = blogs.find((item) => item.id === id)
+
+    if (!findBlog) {
+      setErrorMessage('This blog no longer exists.')
+      setTimeout(() => setErrorMessage(null), 3000)
+      return
+    }
+
+    try {
+      const ok = window.confirm(
+        `Remove blog ${findBlog.title} by ${findBlog.author}`
+      )
+
+      if (ok) {
+        await blogService.deleteOne(id)
+        setBlogs(blogs.filter((item) => item.id !== findBlog.id))
+
+        setSuccessMessage(`${findBlog.title} blog was deleted successfully`)
+      }
+    } catch (exception) {
+      console.log(exception)
+      if (exception?.response?.data?.error === 'token expired') {
+        setErrorMessage('please log in')
+        handleLogout()
+      } else if (exception?.response?.data?.error === 'blog not found') {
+        setErrorMessage('This blog no longer exists')
+        setBlogs(blogs.filter((item) => item.id !== findBlog.id))
+      } else {
+        setErrorMessage(exception?.response?.data?.error)
+      }
+    }
+
+    setTimeout(() => {
+      setSuccessMessage(null)
+      setErrorMessage(null)
+    }, 3000)
+  }
+
+  // sort blogs by likes
+  const sortBlogsByLikes = [...blogs].sort((a, b) => b.likes - a.likes)
+
   return (
-    <div>
+    <div style={{ marginBottom: '20px' }}>
       {user === null ? (
         <div>
           <h2>login to application</h2>
@@ -165,9 +226,11 @@ function App() {
             <h2>create new</h2>
             {blogForm()}
           </div>
-          {blogs.map((blog) => {
-            return <Blog key={blog.id} blog={blog} />
-          })}
+          <Blog
+            sortBlogsByLikes={sortBlogsByLikes}
+            updateLikeNumber={updateLikeNumber}
+            handleDeleteBlog={handleDeleteBlog}
+          />
         </div>
       )}
     </div>

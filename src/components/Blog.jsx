@@ -1,8 +1,19 @@
-const Blog = ({ blog }) => {
+import SingleBlog from './SingleBlog'
+
+const Blog = ({ sortBlogsByLikes, updateLikeNumber, handleDeleteBlog }) => {
   return (
-    <div>
-      {blog.title} - {blog.author}
-    </div>
+    <>
+      {sortBlogsByLikes.map((blog) => {
+        return (
+          <SingleBlog
+            key={blog.id}
+            blog={blog}
+            updateLikeNumber={updateLikeNumber}
+            handleDeleteBlog={handleDeleteBlog}
+          />
+        )
+      })}
+    </>
   )
 }
 
