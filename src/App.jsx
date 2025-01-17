@@ -3,7 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import NotificationMsg from './components/NotificationMsg'
-import ToggleAble from './components/ToggleAble'
+import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 
 function App() {
@@ -115,9 +115,9 @@ function App() {
   }
 
   const blogForm = () => (
-    <ToggleAble buttonLabel='create new blog'>
+    <Togglable buttonLabel='create new blog'>
       <BlogForm createBlog={handleCreateNewBlog} />
-    </ToggleAble>
+    </Togglable>
   )
 
   const updateLikeNumber = async (id) => {

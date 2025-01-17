@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import SingleBlog from './SingleBlog'
 
 const Blog = ({
@@ -21,6 +22,16 @@ const Blog = ({
       })}
     </>
   )
+}
+
+Blog.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  }).isRequired,
+  sortBlogsByLikes: PropTypes.array.isRequired,
+  updateLikeNumber: PropTypes.func.isRequired,
+  handleDeleteBlog: PropTypes.func.isRequired,
 }
 
 export default Blog

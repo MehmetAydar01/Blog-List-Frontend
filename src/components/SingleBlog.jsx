@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import BlogDetail from './BlogDetail'
+import PropTypes from 'prop-types'
 
 const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
   // Aktif blog ID'sini tutuyoruz
@@ -35,6 +36,26 @@ const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
       )}
     </div>
   )
+}
+
+SingleBlog.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  updateLikeNumber: PropTypes.func.isRequired,
+  handleDeleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default SingleBlog

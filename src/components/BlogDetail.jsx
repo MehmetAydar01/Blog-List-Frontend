@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
   if (!blog) {
     return null
@@ -31,6 +33,24 @@ const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
       )}
     </div>
   )
+}
+
+BlogDetail.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    }).isRequired,
+  }),
+  updateLikeNumber: PropTypes.func.isRequired,
+  handleDeleteBlog: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default BlogDetail
