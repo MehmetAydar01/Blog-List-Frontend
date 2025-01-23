@@ -137,11 +137,7 @@ function App() {
       user: findBlog.user.id,
     }
 
-    const userInfo = {
-      name: findBlog.user.name,
-      username: findBlog.user.username,
-      id: findBlog.user.id,
-    }
+    const userInfo = findBlog.user
 
     try {
       const updatedBlog = await blogService.update(id, newObject)
