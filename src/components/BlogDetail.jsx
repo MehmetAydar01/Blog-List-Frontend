@@ -19,11 +19,17 @@ const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
   const name = blog.user.name
 
   return (
-    <div>
-      <p>{blog.url}</p>
+    <>
+      <p className='blogUrl'>{blog.url}</p>
       <p>
         likes: {blog.likes}
-        <button onClick={() => updateLikeNumber(blog.id)}>like</button>
+        <button
+          type='button'
+          onClick={() => updateLikeNumber(blog.id)}
+          className='likeButton'
+        >
+          like
+        </button>
       </p>
       <p>{name}</p>
       {blog.user.name === user.name && blog.user.username === user.username && (
@@ -31,7 +37,7 @@ const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
           remove
         </button>
       )}
-    </div>
+    </>
   )
 }
 

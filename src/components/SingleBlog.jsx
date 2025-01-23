@@ -20,19 +20,21 @@ const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <span style={{ marginRight: '5px' }}>
+      <span style={{ marginRight: '5px' }} className='blogInfo'>
         {blog.title} - {blog.author}
       </span>
-      <button onClick={() => toggleDetails(blog.id)}>
+      <button onClick={() => toggleDetails(blog.id)} className='toggleButton'>
         {activeBlogId === blog.id ? 'hide' : 'view'}
       </button>
       {activeBlogId === blog.id && (
-        <BlogDetail
-          blog={blog}
-          updateLikeNumber={updateLikeNumber}
-          handleDeleteBlog={handleDeleteBlog}
-          user={user}
-        />
+        <div className='blogDetails'>
+          <BlogDetail
+            blog={blog}
+            updateLikeNumber={updateLikeNumber}
+            handleDeleteBlog={handleDeleteBlog}
+            user={user}
+          />
+        </div>
       )}
     </div>
   )
@@ -41,10 +43,10 @@ const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
 SingleBlog.propTypes = {
   blog: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    likes: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
+    url: PropTypes.string,
+    likes: PropTypes.number,
+    title: PropTypes.string,
+    author: PropTypes.string,
     user: PropTypes.shape({
       name: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
