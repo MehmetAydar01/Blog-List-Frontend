@@ -68,6 +68,7 @@ function App() {
       <div>
         username
         <input
+          data-testid='username'
           type='text'
           name='username'
           value={username}
@@ -77,6 +78,7 @@ function App() {
       <div>
         password
         <input
+          data-testid='password'
           type='password'
           name='password'
           value={password}

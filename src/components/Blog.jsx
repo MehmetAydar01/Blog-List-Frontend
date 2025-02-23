@@ -8,7 +8,7 @@ const Blog = ({
   user,
 }) => {
   return (
-    <>
+    <div className='blogs'>
       {sortBlogsByLikes.map((blog) => {
         return (
           <SingleBlog
@@ -20,7 +20,7 @@ const Blog = ({
           />
         )
       })}
-    </>
+    </div>
   )
 }
 

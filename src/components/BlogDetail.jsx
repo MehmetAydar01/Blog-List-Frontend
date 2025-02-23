@@ -22,7 +22,7 @@ const BlogDetail = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
     <>
       <p className='blogUrl'>{blog.url}</p>
       <p>
-        likes: {blog.likes}
+        <span className='likes'>likes: {blog.likes}</span>
         <button
           type='button'
           onClick={() => updateLikeNumber(blog.id)}

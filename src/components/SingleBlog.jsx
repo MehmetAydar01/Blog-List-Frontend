@@ -19,7 +19,7 @@ const SingleBlog = ({ blog, updateLikeNumber, handleDeleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog-item'>
       <span style={{ marginRight: '5px' }} className='blogInfo'>
         {blog.title} - {blog.author}
       </span>
